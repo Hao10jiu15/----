@@ -1,6 +1,7 @@
 // variable.js (M 类)
 const state = {
-    variables: {}
+    variables: {},
+    currentLine: 0
 };
 
 export function updateState(newVars) {
@@ -11,5 +12,5 @@ export function updateState(newVars) {
 }
 
 export function getState() {
-    return state.variables; // 返回当前变量状态
+    return state;
 }

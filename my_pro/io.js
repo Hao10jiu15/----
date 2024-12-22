@@ -1,8 +1,9 @@
 // io.js (IO 类)
 export class IO {
     input() {
-        const userInput = prompt("请输入数据：");
-        return userInput;
+        // 使用文本区域作为输入来源，无需prompt
+        const textarea = document.getElementById('myTextarea');
+        return textarea.value.trim();
     }
 
     get_output(result) {
@@ -10,6 +11,15 @@ export class IO {
     }
 
     output(result) {
-        console.log("程序输出:", result);
+        const outputElement = document.getElementById('output');
+        outputElement.textContent += result + '\n'; // 追加输出
+    }
+
+    // 异步提示用户输入，用于 scanf
+    promptUser(formatStr) {
+        return new Promise((resolve) => {
+            const userInput = prompt(`请输入 ${formatStr}:`);
+            resolve(userInput);
+        });
     }
 }

@@ -3,7 +3,7 @@ export function formatCode(code) {
     if (!code) throw new Error("代码不能为空");
 
     // 检查基本语法（可扩展为 AST）
-    if (!isValidSyntax(code)) return "Syntax Error";
+    if (!isValidSyntax(code)) throw new Error("语法错误");
 
     // 格式化代码
     return code
@@ -13,5 +13,5 @@ export function formatCode(code) {
 
 function isValidSyntax(code) {
     // 简单语法规则检查
-    return code.startsWith("{") && code.endsWith("}");
+    return code.includes('{') && code.includes('}');
 }
