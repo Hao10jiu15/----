@@ -1,63 +1,43 @@
-// core.js
-import {
-    processIO
-} from './io.js';
-import {
-    updateState
-} from './variable.js';
+// core.js (P 类)
 import {
     visualize
-} from './visualization.js';
+} from './display.js';
+import {
+    formatCode
+} from './input.js';
+import {
+    getState,
+    updateState
+} from './variable.js';
 
-export function execute(code) {
-    const syntaxTree = parseCode(code); // 解析代码成语法树
-    const vars = {};
+export class Core {
+    recv_input(code) {
+        this.code = formatCode(code); // 调用代码模块
+    }
 
-    syntaxTree.forEach((node, index) => {
-        const currentLine = index + 1;
-        executeNode(node, vars);
-        updateState(vars, getControlFlow(node));
-        visualize(currentLine);
-    });
+    analysis_code() {
+        // 模拟解析代码生成语法树
+        return this.code.split(';').map(line => line.trim());
+    }
 
-    // 输出最终变量状态
-    processIO(`程序运行结束，最终变量状态:\n${JSON.stringify(vars, null, 2)}`);
-}
+    execute() {
+        const syntaxTree = this.analysis_code(); // 解析代码
+        const vars = {}; // 初始化变量
+        syntaxTree.forEach(line => {
+            this.executeLine(line, vars); // 执行每行代码
+            const state = getState(); // 获取当前变量状态
+            visualize(state); // 调用展示模块
+        });
+    }
 
-function parseCode(code) {
-    // 简单的语法树解析（按行拆分）
-    const lines = code.split('\n').map(line => line.trim()).filter(line => line && !line.startsWith('//'));
-    // 去除函数声明和括号
-    return lines.filter(line => !line.startsWith('int main') && line !== '{' && line !== '}');
-}
-
-function executeNode(node, vars) {
-    if (node.startsWith('int')) {
-        const match = /int\s+(\w+)\s*=\s*(.+);/.exec(node);
-        if (match) {
-            const [, name, value] = match;
-            vars[name] = evaluateExpression(value, vars);
+    executeLine(line, vars) {
+        if (line.startsWith('int')) {
+            const [_, name, value] = /int\s+(\w+)\s*=\s*(\d+)/.exec(line);
+            vars[name] = parseInt(value);
+            updateState({
+                [name]: vars[name]
+            }); // 更新变量状态
         }
-    } else if (node.startsWith('return')) {
-        // 处理 return 语句（简单模拟）
-        // 这里可以扩展更多功能
+        // 其他语句逻辑...
     }
-    // 其他语句逻辑...
-}
-
-function evaluateExpression(expr, vars) {
-    // 简单的表达式评估（支持加法）
-    if (expr.includes('+')) {
-        const [a, b] = expr.split('+').map(part => part.trim());
-        return (parseInt(vars[a] || a) + parseInt(vars[b] || b));
-    }
-    return parseInt(vars[expr] || expr);
-}
-
-function getControlFlow(node) {
-    // 简单模拟控制流获取
-    if (node.startsWith('if')) {
-        return '条件判断';
-    }
-    return '普通语句';
 }

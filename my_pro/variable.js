@@ -1,17 +1,15 @@
-// variable.js
+// variable.js (M 类)
 const state = {
-    variables: {},
-    controlFlow: null,
+    variables: {}
 };
 
-export function updateState(newVars, newFlow) {
+export function updateState(newVars) {
     state.variables = {
         ...state.variables,
         ...newVars
-    };
-    state.controlFlow = newFlow;
+    }; // 更新变量状态
 }
 
 export function getState() {
-    return state;
+    return state.variables; // 返回当前变量状态
 }
