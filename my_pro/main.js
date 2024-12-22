@@ -3,12 +3,17 @@ import {
     Core
 } from './core.js'; // 核心逻辑模块
 import {
+    visualize
+} from './display.js';
+import {
     IO
 } from './io.js'; // 终端输入输出模块
 
-// 创建核心逻辑模块和输入输出模块的实例
-const core = new Core();
+// 创建IO实例
 const io = new IO();
+
+// 创建核心逻辑模块实例，传入IO实例
+const core = new Core(io);
 
 // 记录当前执行步骤
 let currentStep = 0;
@@ -23,7 +28,7 @@ const nextButton = document.getElementById('next_button');
 // 运行按钮事件
 runButton.addEventListener('click', () => {
     resetExecution();
-    const userCode = io.input(); // 从终端模块接收用户输入的代码
+    const userCode = io.getCode(); // 从代码显示区域获取代码
     if (!userCode) {
         io.output("输入代码为空，程序终止。");
         return;
@@ -41,7 +46,7 @@ runButton.addEventListener('click', () => {
 prevButton.addEventListener('click', () => {
     if (currentStep > 0) {
         currentStep--;
-        executeStep();
+        executeStep(true); // true 表示回退
     } else {
         io.output("已经是第一步。");
     }
@@ -61,23 +66,36 @@ function resetExecution() {
     currentStep = 0;
     syntaxTree = [];
     vars = {};
-    document.getElementById('output').textContent = '';
-    document.getElementById('variable-monitor').innerHTML = '';
-    const ctx = document.getElementById('control-flow-canvas').getContext('2d');
-    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-    core.reset(); // 如果Core类有reset方法
+    io.clearOutput();
+    io.clearVariables();
+    core.reset(); // 重置核心逻辑
+    visualize(0); // 重置高亮
+    // 重新启用“下一步”按钮
+    nextButton.disabled = false;
 }
 
 // 执行单步
-async function executeStep() {
+async function executeStep(isBack = false) {
+    if (isBack) {
+        // 回退执行步骤
+        // 实现回退逻辑，当前示例未实现
+        // 可以根据需要进行扩展
+        io.output(`回退到第 ${currentStep} 步。`);
+        return;
+    }
+
     if (currentStep < syntaxTree.length) {
         const line = syntaxTree[currentStep];
         try {
-            await core.executeLine(line, vars); // 执行当前行，可能涉及异步操作（如scanf）
+            await core.executeLine(line, vars);
             currentStep++;
             io.output(`执行第 ${currentStep} 步: ${line}`);
         } catch (error) {
             io.output(`执行出错在第 ${currentStep + 1} 步: ${error.message}`);
         }
+    } else {
+        io.output("代码执行完毕。");
+        // 禁用“下一步”按钮
+        nextButton.disabled = true;
     }
 }

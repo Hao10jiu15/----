@@ -3,57 +3,66 @@
 
     <head>
         <meta charset="UTF-8">
-        <title id="title">C语言执行过程的展示</title>
-        <link rel="stylesheet" href="exp3_1.css">
+        <title>C语言执行过程的展示</title>
+        <link rel="stylesheet" href="styles.css">
         <!-- 引入模块化脚本 -->
         <script type="module" src="main.js" defer></script>
     </head>
 
     <body>
-        <div class="all">
-            <!-- 左侧区域：代码输入 -->
-            <div class="left">
-                <div class="code_textarea">
-                    <textarea id="myTextarea">
-#include <stdio.h>
-int main() {
-    int a = 5;
-    int b = 10;
-    printf("%d %d\n", a, b);
-    scanf("%d %d", &a, &b);
-    int sum = a + b;
-    printf("%d %d\n", a, b);
-    return 0;
-}
-                </textarea>
+        <div class="container">
+            <div class="main-content">
+                <!-- 代码显示区域 -->
+                <div class="code-area">
+                    <pre id="codeDisplay">
+<span class="code-line">#include &lt;stdio.h&gt;</span>
+<span class="code-line">int main() {</span>
+<span class="code-line">    int a = 5;</span>
+<span class="code-line">    int b = 10;</span>
+<span class="code-line">    printf("%d %d\n", a, b);</span>
+<span class="code-line">    scanf("%d %d", &a, &b);</span>
+<span class="code-line">    int sum = a + b;</span>
+<span class="code-line">    printf("%d %d\n", a, b);</span>
+<span class="code-line">    return 0;</span>
+<span class="code-line">}</span>
+                </pre>
                     <div class="button-group">
                         <button id="run_button">运行</button>
+                        <button id="prev_button">上一步</button>
+                        <button id="next_button">下一步</button>
                     </div>
                 </div>
-            </div>
-
-            <!-- 右侧区域：可视化展示 -->
-            <div class="right">
-                <div class="visualization">
+                <!-- 变量监视器 -->
+                <div class="variable-monitor">
                     <h2>变量监视器</h2>
-                    <div id="variable-monitor"></div>
-                    <h2>控制流路径</h2>
-                    <canvas id="control-flow-canvas" width="400" height="200"></canvas>
+                    <div id="variable-monitor-content"></div>
                 </div>
             </div>
-
-            <!-- 底部区域：终端输入输出及控制按钮 -->
-            <div class="bottom">
-                <div class="terminal">
-                    <h2>输出结果</h2>
-                    <pre id="output"></pre>
-                </div>
-                <div class="control-buttons">
-                    <button id="prev_button">上一步</button>
-                    <button id="next_button">下一步</button>
+            <!-- 终端区域 -->
+            <div class="terminal">
+                <h2>终端</h2>
+                <pre id="output"></pre>
+                <div class="input-group">
+                    <input type="text" id="input" placeholder="输入">
+                    <button id="submit_input">提交</button>
                 </div>
             </div>
         </div>
+
+        <!-- 同步代码显示的脚本 -->
+        <script>
+            function syncCode() {
+                const textarea = document.getElementById('myTextarea');
+                const codeDisplay = document.getElementById('codeDisplay');
+                const lines = textarea.value.split('\n');
+                codeDisplay.innerHTML = lines.map(line => `<span class="code-line">${line}</span>`).join('\n');
+            }
+            // 如果有文本区域用于编辑代码，可以启用以下代码同步
+            /*
+            document.getElementById('myTextarea').addEventListener('input', syncCode);
+            window.onload = syncCode; // 初始化同步
+            */
+        </script>
     </body>
 
 </html>

@@ -6,16 +6,12 @@ import {
     formatCode
 } from './input.js';
 import {
-    IO
-} from './io.js'; // 引入IO类
-import {
     updateState
 } from './variable.js';
 
-const ioInstance = new IO(); // 创建IO类的实例，用于输出和输入
-
 export class Core {
-    constructor() {
+    constructor(ioInstance) {
+        this.io = ioInstance;
         this.code = '';
         this.syntaxTree = [];
     }
@@ -24,6 +20,7 @@ export class Core {
     recv_input(code) {
         this.code = formatCode(code); // 调用代码模块
         this.syntaxTree = this.analysis_code();
+        console.log("语法树:", this.syntaxTree); // 调试日志
         return this.syntaxTree;
     }
 
@@ -35,6 +32,7 @@ export class Core {
 
     // 执行单行代码
     async executeLine(line, vars) {
+        console.log("执行行:", line); // 调试日志
         if (line.startsWith('int')) {
             const match = /int\s+(\w+)\s*=\s*(.+);/.exec(line);
             if (match) {
@@ -60,7 +58,7 @@ export class Core {
                     return vars[name];
                 });
                 const formattedOutput = formatStr.replace(/%d/g, () => varValues.shift());
-                ioInstance.output(formattedOutput);
+                this.io.output(formattedOutput);
                 visualize(vars.currentLine = this.syntaxTree.indexOf(line) + 1); // 可视化
             } else {
                 throw new Error(`无法解析 printf 语句: ${line}`);
@@ -70,8 +68,8 @@ export class Core {
             if (match) {
                 const [, formatStr, varsStr] = match;
                 const varNames = varsStr.split(',').map(v => v.trim().replace('&', ''));
-                const userInputs = await ioInstance.promptUser(formatStr); // 异步等待用户输入
-                const inputValues = userInputs.split(' ').map(input => parseInt(input));
+                const userInput = await this.io.requestInput(formatStr); // 异步等待用户输入
+                const inputValues = userInput.split(' ').map(input => parseInt(input));
                 varNames.forEach((name, index) => {
                     vars[name] = inputValues[index];
                     updateState({
