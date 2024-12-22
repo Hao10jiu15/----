@@ -15,16 +15,16 @@
                 <!-- 代码显示区域 -->
                 <div class="code-area">
                     <pre id="codeDisplay">
-<span class="code-line">#include &lt;stdio.h&gt;</span>
-<span class="code-line">int main() {</span>
-<span class="code-line">    int a = 5;</span>
-<span class="code-line">    int b = 10;</span>
-<span class="code-line">    printf("%d %d\n", a, b);</span>
-<span class="code-line">    scanf("%d %d", &a, &b);</span>
-<span class="code-line">    int sum = a + b;</span>
-<span class="code-line">    printf("%d %d\n", a, b);</span>
-<span class="code-line">    return 0;</span>
-<span class="code-line">}</span>
+<span class="code-line"><span class="triangle"></span>#include &lt;stdio.h&gt;</span>
+<span class="code-line"><span class="triangle"></span>int main() {</span>
+<span class="code-line"><span class="triangle"></span>    int a = 5;</span>
+<span class="code-line"><span class="triangle"></span>    int b = 10;</span>
+<span class="code-line"><span class="triangle"></span>    printf("%d %d\n", a, b);</span>
+<span class="code-line"><span class="triangle"></span>    scanf("%d %d", &amp;a, &amp;b);</span>
+<span class="code-line"><span class="triangle"></span>    int sum = a + b;</span>
+<span class="code-line"><span class="triangle"></span>    printf("%d %d\n", a, b);</span>
+<span class="code-line"><span class="triangle"></span>    return 0;</span>
+<span class="code-line"><span class="triangle"></span>}</span>
                 </pre>
                     <div class="button-group">
                         <button id="run_button">运行</button>
@@ -48,21 +48,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- 同步代码显示的脚本 -->
-        <script>
-            function syncCode() {
-                const textarea = document.getElementById('myTextarea');
-                const codeDisplay = document.getElementById('codeDisplay');
-                const lines = textarea.value.split('\n');
-                codeDisplay.innerHTML = lines.map(line => `<span class="code-line">${line}</span>`).join('\n');
-            }
-            // 如果有文本区域用于编辑代码，可以启用以下代码同步
-            /*
-            document.getElementById('myTextarea').addEventListener('input', syncCode);
-            window.onload = syncCode; // 初始化同步
-            */
-        </script>
     </body>
 
 </html>

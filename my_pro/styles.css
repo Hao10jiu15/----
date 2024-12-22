@@ -26,7 +26,8 @@ body {
     flex: 2;
     background-color: #2d2d2d;
     color: #f8f8f2;
-    padding: 10px;
+    padding: 10px 10px 10px 40px;
+    /* 左侧内边距增加到40px，为三角形留出更多空间 */
     border: 1px solid #555;
     border-radius: 4px;
     overflow: auto;
@@ -42,10 +43,26 @@ body {
 .code-line {
     display: block;
     padding: 2px 5px;
+    position: relative;
+    /* 使伪类元素相对于每行定位 */
 }
 
-.code-line.highlight {
-    background-color: #ffff99;
+.code-line.current-exec::before {
+    content: '';
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border-left: 10px solid red;
+    /* 更大的三角形 */
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    margin-right: 10px;
+    /* 增加右边距，使代码与三角形有更大间隔 */
+    position: absolute;
+    left: 0;
+    /* 将三角形定位在行的最左边 */
+    top: 50%;
+    transform: translateY(-50%);
 }
 
 .button-group {
@@ -91,6 +108,39 @@ body {
     overflow-y: auto;
     font-family: Consolas, monospace;
     font-size: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.variable-box {
+    background-color: #e6f7ff;
+    border: 1px solid #91d5ff;
+    border-radius: 4px;
+    padding: 10px;
+    margin: 5px;
+    display: flex;
+    flex-direction: column;
+    min-width: 150px;
+    box-sizing: border-box;
+}
+
+.var-name {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.var-type {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.var-value {
+    margin-bottom: 5px;
+}
+
+.var-address {
+    font-family: monospace;
+    color: #555;
 }
 
 .terminal {

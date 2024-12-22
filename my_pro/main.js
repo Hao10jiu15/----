@@ -18,7 +18,6 @@ const core = new Core(io);
 // 记录当前执行步骤
 let currentStep = 0;
 let syntaxTree = [];
-let vars = {};
 
 // 获取按钮元素
 const runButton = document.getElementById('run_button');
@@ -65,11 +64,10 @@ nextButton.addEventListener('click', () => {
 function resetExecution() {
     currentStep = 0;
     syntaxTree = [];
-    vars = {};
     io.clearOutput();
     io.clearVariables();
     core.reset(); // 重置核心逻辑
-    visualize(0); // 重置高亮
+    visualize(0); // 重置执行指示符和变量监视器
     // 重新启用“下一步”按钮
     nextButton.disabled = false;
 }
@@ -77,21 +75,24 @@ function resetExecution() {
 // 执行单步
 async function executeStep(isBack = false) {
     if (isBack) {
-        // 回退执行步骤
-        // 实现回退逻辑，当前示例未实现
-        // 可以根据需要进行扩展
-        io.output(`回退到第 ${currentStep} 步。`);
+        // 实现回退执行步骤逻辑
+        // 当前示例中，仅更新高亮和变量监视器
+        visualize(currentStep);
+        console.log(`回退到步骤 ${currentStep}`);
         return;
     }
 
     if (currentStep < syntaxTree.length) {
         const line = syntaxTree[currentStep];
+        console.log(`执行步骤 ${currentStep + 1}: ${line}`);
         try {
-            await core.executeLine(line, vars);
+            await core.executeLine(line);
             currentStep++;
-            io.output(`执行第 ${currentStep} 步: ${line}`);
+            visualize(currentStep); // 高亮当前行并更新变量监视器
+            console.log(`已执行步骤 ${currentStep}`);
         } catch (error) {
             io.output(`执行出错在第 ${currentStep + 1} 步: ${error.message}`);
+            console.error(`执行出错在第 ${currentStep + 1} 步:`, error);
         }
     } else {
         io.output("代码执行完毕。");
