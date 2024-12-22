@@ -1,4 +1,4 @@
-// display.js (Display 类)
+// display.js (显示模块)
 import {
     getState
 } from './variable.js';

@@ -1,4 +1,4 @@
-// main.js
+// main.js (主控制模块)
 import {
     Core
 } from './core.js'; // 核心逻辑模块
@@ -7,7 +7,7 @@ import {
 } from './display.js';
 import {
     IO
-} from './io.js'; // 终端输入输出模块
+} from './io.js'; // 输入输出模块
 
 // 创建IO实例
 const io = new IO();
@@ -87,14 +87,16 @@ async function executeStep(isBack = false) {
         console.log(`执行步骤 ${currentStep + 1}: ${line}`);
         try {
             const executed = await core.executeLine(line);
+            console.log(`执行结果: ${executed}`); // 调试日志
             if (executed) {
                 visualize(currentStep + 1); // 高亮当前行并更新变量监视器
+                console.log(`是否执行: ${executed}`); // 调试日志
+                currentStep++;
+                console.log(`已执行步骤 ${currentStep}`);
+                break; // 只执行一条可执行的代码
             }
             currentStep++;
             console.log(`已执行步骤 ${currentStep}`);
-            if (executed) {
-                break; // 只执行一条可执行的代码
-            }
         } catch (error) {
             io.output(`执行出错在第 ${currentStep + 1} 步: ${error.message}`);
             console.error(`执行出错在第 ${currentStep + 1} 步:`, error);
