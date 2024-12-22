@@ -11,13 +11,17 @@ export function visualize(currentLine) {
 
 function highlightCurrentLine(line) {
     const codeLines = document.querySelectorAll('.code-line');
-    codeLines.forEach((el, index) => {
+    codeLines.forEach((el) => {
         // 移除所有行的 'current-exec' 类
         el.classList.remove('current-exec');
     });
-    if (line > 0 && line <= codeLines.length) {
-        const currentLineElement = codeLines[line - 1];
-        currentLineElement.classList.add('current-exec');
+    if (line !== null) {
+        // 确保行号在有效范围内
+        const codeLinesArray = Array.from(codeLines);
+        if (line - 1 >= 0 && line - 1 < codeLinesArray.length) {
+            const currentLineElement = codeLinesArray[line - 1];
+            currentLineElement.classList.add('current-exec');
+        }
     }
 }
 

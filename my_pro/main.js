@@ -3,11 +3,11 @@ import {
     Core
 } from './core.js'; // 核心逻辑模块
 import {
-    visualize
-} from './display.js';
-import {
     IO
 } from './io.js'; // 输入输出模块
+import {
+    visualize
+} from './display.js';
 
 // 创建IO实例
 const io = new IO();
@@ -65,9 +65,9 @@ function resetExecution() {
     currentStep = 0;
     syntaxTree = [];
     io.clearOutput();
-    io.clearVariables();
+    io.clearVariables(); // 清空变量监视器
     core.reset(); // 重置核心逻辑
-    visualize(0); // 重置执行指示符和变量监视器
+    visualize(null); // 重置执行指示符和变量监视器
     // 重新启用“下一步”按钮
     nextButton.disabled = false;
 }
@@ -77,31 +77,41 @@ async function executeStep(isBack = false) {
     if (isBack) {
         // 实现回退执行步骤逻辑
         // 当前示例中，仅更新高亮和变量监视器
-        visualize(currentStep);
-        console.log(`回退到步骤 ${currentStep}`);
+        if (currentStep < syntaxTree.length) {
+            const prevLine = syntaxTree[currentStep].line;
+            visualize(prevLine);
+            console.log(`回退到步骤 ${currentStep}`);
+        } else {
+            visualize(null);
+        }
         return;
     }
 
-    while (currentStep < syntaxTree.length) {
-        const line = syntaxTree[currentStep];
-        console.log(`执行步骤 ${currentStep + 1}: ${line}`);
-        try {
-            const executed = await core.executeLine(line);
-            console.log(`执行结果: ${executed}`); // 调试日志
-            if (executed) {
-                visualize(currentStep + 1); // 高亮当前行并更新变量监视器
-                console.log(`是否执行: ${executed}`); // 调试日志
-                currentStep++;
-                console.log(`已执行步骤 ${currentStep}`);
-                break; // 只执行一条可执行的代码
-            }
-            currentStep++;
-            console.log(`已执行步骤 ${currentStep}`);
-        } catch (error) {
-            io.output(`执行出错在第 ${currentStep + 1} 步: ${error.message}`);
-            console.error(`执行出错在第 ${currentStep + 1} 步:`, error);
-            break;
+    if (currentStep >= syntaxTree.length) {
+        io.output("代码执行完毕。");
+        nextButton.disabled = true;
+        return;
+    }
+
+    const lineObj = syntaxTree[currentStep];
+    const lineNumber = lineObj.line;
+    const lineCode = lineObj.code;
+    console.log(`执行步骤 ${currentStep + 1}: ${lineCode}`);
+
+    try {
+        const executed = await core.executeLine(lineObj);
+        console.log(`执行结果: ${executed}`); // 调试日志
+        if (executed) {
+            visualize(lineNumber); // 高亮当前行并更新变量监视器
+            console.log(`是否执行: ${executed}`); // 调试日志
+        } else {
+            visualize(null); // 如果未执行，取消高亮
         }
+        currentStep++;
+        console.log(`已执行步骤 ${currentStep}`);
+    } catch (error) {
+        io.output(`执行出错在第 ${currentStep + 1} 步: ${error.message}`);
+        console.error(`执行出错在第 ${currentStep + 1} 步:`, error);
     }
 
     if (currentStep >= syntaxTree.length) {

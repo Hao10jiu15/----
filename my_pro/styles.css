@@ -26,8 +26,8 @@ body {
     flex: 2;
     background-color: #2d2d2d;
     color: #f8f8f2;
-    padding: 10px 10px 10px 40px;
-    /* 左侧内边距增加到40px，为三角形留出更多空间 */
+    padding: 10px;
+    /* 左侧内边距减少 */
     border: 1px solid #555;
     border-radius: 4px;
     overflow: auto;
@@ -44,25 +44,15 @@ body {
     display: block;
     padding: 2px 5px;
     position: relative;
-    /* 使伪类元素相对于每行定位 */
+    /* 保留以便后续可能的定位 */
 }
 
-.code-line.current-exec::before {
-    content: '';
-    display: inline-block;
-    width: 0;
-    height: 0;
-    border-left: 10px solid red;
-    /* 更大的三角形 */
-    border-top: 5px solid transparent;
-    border-bottom: 5px solid transparent;
-    margin-right: 10px;
-    /* 增加右边距，使代码与三角形有更大间隔 */
-    position: absolute;
-    left: 0;
-    /* 将三角形定位在行的最左边 */
-    top: 50%;
-    transform: translateY(-50%);
+/* 高亮当前执行行为橙色 */
+.code-line.current-exec {
+    background-color: orange;
+    color: black;
+    /* 改变文字颜色以提高可读性 */
+    border-radius: 3px;
 }
 
 .button-group {
