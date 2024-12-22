@@ -82,21 +82,28 @@ async function executeStep(isBack = false) {
         return;
     }
 
-    if (currentStep < syntaxTree.length) {
+    while (currentStep < syntaxTree.length) {
         const line = syntaxTree[currentStep];
         console.log(`执行步骤 ${currentStep + 1}: ${line}`);
         try {
-            await core.executeLine(line);
+            const executed = await core.executeLine(line);
+            if (executed) {
+                visualize(currentStep + 1); // 高亮当前行并更新变量监视器
+            }
             currentStep++;
-            visualize(currentStep); // 高亮当前行并更新变量监视器
             console.log(`已执行步骤 ${currentStep}`);
+            if (executed) {
+                break; // 只执行一条可执行的代码
+            }
         } catch (error) {
             io.output(`执行出错在第 ${currentStep + 1} 步: ${error.message}`);
             console.error(`执行出错在第 ${currentStep + 1} 步:`, error);
+            break;
         }
-    } else {
+    }
+
+    if (currentStep >= syntaxTree.length) {
         io.output("代码执行完毕。");
-        // 禁用“下一步”按钮
         nextButton.disabled = true;
     }
 }
