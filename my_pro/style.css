@@ -1,0 +1,37 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
+
+h1,
+h2 {
+    color: #333;
+}
+
+#code-input,
+#output,
+#variable-monitor,
+#code-display {
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    font-family: Consolas, monospace;
+    background-color: #f5f5f5;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+#run-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    margin-top: 10px;
+}
+
+.code-line.highlight {
+    background-color: #ffff99;
+}
+
+#control-flow-canvas {
+    border: 1px solid #ccc;
+    background-color: #fafafa;
+}

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+    <head>
+        <meta charset="UTF-8">
+        <title>C程序执行可视化</title>
+        <link rel="stylesheet" href="styles.css">
+    </head>
+
+    <body>
+        <h1>C程序执行可视化</h1>
+
+        <div id="input-section">
+            <h2>输入代码</h2>
+            <textarea id="code-input" rows="10" cols="80">
+int main() {
+    int a = 5;
+    int b = 10;
+    int sum = a + b;
+    return 0;
+}
+        </textarea>
+            <br>
+            <button id="run-button">运行</button>
+        </div>
+
+        <div id="output-section">
+            <h2>输出结果</h2>
+            <pre id="output"></pre>
+        </div>
+
+        <div id="variable-monitor-section">
+            <h2>变量监视器</h2>
+            <div id="variable-monitor"></div>
+        </div>
+
+        <div id="control-flow-section">
+            <h2>控制流路径</h2>
+            <canvas id="control-flow-canvas" width="400" height="200"></canvas>
+        </div>
+
+        <div id="code-display-section">
+            <h2>代码展示</h2>
+            <pre id="code-display">
+<span class="code-line">int main() {</span>
+<span class="code-line">    int a = 5;</span>
+<span class="code-line">    int b = 10;</span>
+<span class="code-line">    int sum = a + b;</span>
+<span class="code-line">    return 0;</span>
+<span class="code-line">}</span>
+        </pre>
+        </div>
+
+        <script type="module" src="input.js"></script>
+        <script type="module" src="core.js"></script>
+        <script type="module" src="io.js"></script>
+        <script type="module" src="visualization.js"></script>
+        <script type="module" src="variable.js"></script>
+    </body>
+
+</html>
