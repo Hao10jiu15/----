@@ -1,4 +1,4 @@
-// variable.js (M 类)
+// variable.js (变量管理模块)
 const state = {
     variables: {},
     currentLine: 0
