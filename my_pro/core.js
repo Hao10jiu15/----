@@ -60,7 +60,7 @@ export class Core {
     }
 
     // 执行单行代码
-    async executeLine(lineObj) {
+    async executeLine(lineObj) {    
         const line = lineObj.code;
         const lineNumber = lineObj.line;
         console.log(`执行行 (${lineNumber}): ${line}`); // 调试日志
@@ -75,7 +75,7 @@ export class Core {
                 return true; // 表示该行已被执行
             } else {
                 throw new Error(`无法解析变量声明: ${line} (行号: ${lineNumber})`);
-            }
+            }   
         } else if (line.startsWith('printf')) {
             const match = /printf\s*\(\s*"([^"]*)"\s*,\s*(.*)\s*\);/.exec(line);
             if (match) {
